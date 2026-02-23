@@ -9,8 +9,10 @@ import Footer from "./components/common/footer";
 export default function App() {
   return (
     <Box>
-      <Navbar />
-      <Hero />
+      <Box bg="lightPink">
+        <Navbar />
+        <Hero />
+      </Box>
       <Packages />
       <Team />
       <Newsletter />
