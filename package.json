@@ -16,6 +16,8 @@
     "@mantine/form": "^8.3.15",
     "@mantine/hooks": "^8.3.15",
     "@mantine/nprogress": "^8.3.15",
+    "@tabler/icons-png": "^3.37.1",
+    "@tabler/icons-react": "^3.37.1",
     "embla-carousel": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "react": "^19.2.0",

@@ -1,0 +1,14 @@
+.anchorWithArrow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+
+.anchorWithArrow svg {
+  transition: transform 0.2s ease;
+}
+
+.anchorWithArrow:hover svg {
+  transform: translateX(5px);
+}
