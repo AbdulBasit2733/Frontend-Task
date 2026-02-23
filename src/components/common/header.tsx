@@ -1,5 +1,6 @@
 import { Group, Text, Button, Anchor, Container } from "@mantine/core";
 import { navLinks } from "../../data/siteData";
+import { IconArrowRight } from "@tabler/icons-react";
 
 export default function Navbar() {
   return (
@@ -26,7 +27,11 @@ export default function Navbar() {
           <Anchor href="#" c="green" fw={600} fz="sm" underline="never">
             Login
           </Anchor>
-          <Button color="green" radius="md" rightSection="→">
+          <Button
+            color="green"
+            radius="md"
+            rightSection={<IconArrowRight size={16} />}
+          >
             JOIN US
           </Button>
         </Group>
