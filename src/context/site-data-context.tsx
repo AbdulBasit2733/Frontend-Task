@@ -26,9 +26,7 @@ export function SiteDataProvider({ children }: { children: ReactNode }) {
   const [isEditMode, setIsEditMode] = useState(false);
 
   const toggleEditMode = () => setIsEditMode((p) => !p);
-  const updateNavbarContent = (
-    updated: Partial<Omit<NavbarContent, "navLinks">>,
-  ) =>
+  const updateNavbarContent = (updated: Partial<NavbarContent>) =>
     setData((p) => ({
       ...p,
       navbarSectionContent: { ...p.navbarSectionContent, ...updated },

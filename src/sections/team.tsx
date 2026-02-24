@@ -14,6 +14,7 @@ import {
   Button,
   Stack,
   Tooltip,
+  Divider,
 } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -27,10 +28,33 @@ import {
   IconArrowLeft,
   IconArrowRight,
 } from "@tabler/icons-react";
-import { useSiteData } from "../../context/site-data-context";
-import type { TeamContent, TeamMember } from "../../types/types";
+import { useSiteData } from "../context/site-data-context";
+import type { TeamContent, TeamMember } from "../types/types";
 
-const emptyMember: TeamMember = { id: 0, name: "", profession: "", image: "" };
+// ── Types ─────────────────────────────────────────────────
+type MemberLink = NonNullable<TeamMember["links"]>[number];
+
+// ── Helpers ───────────────────────────────────────────────
+function MemberSocialIcon({ platform }: { platform: string }) {
+  if (platform === "instagram") return <IconBrandInstagram size={20} />;
+  if (platform === "twitter") return <IconBrandTwitter size={20} />;
+  return <IconBrandFacebook size={20} />;
+}
+
+const emptyMember: TeamMember = {
+  id: 0,
+  name: "",
+  profession: "",
+  image: "",
+  links: [],
+};
+const emptyLink: MemberLink = { platform: "", href: "" };
+
+// ── Modal mode for links ──────────────────────────────────
+type LinkModalMode =
+  | { type: "editLink"; linkIndex: number }
+  | { type: "addLink" }
+  | null;
 
 export default function Team() {
   const {
@@ -44,12 +68,12 @@ export default function Team() {
 
   const { label, title, description, teamMembers } = data.teamSectionContent;
 
-  // ── Responsive slides per scroll ─────────────────────
+  // ── Responsive carousel ───────────────────────────────
   const isMobile = useMediaQuery("(max-width: 576px)");
   const isTablet = useMediaQuery("(max-width: 992px)");
   const slidesToScroll = isMobile ? 1 : isTablet ? 2 : 4;
 
-  // ── Section edit modal ────────────────────────────────
+  // ── Section modal ─────────────────────────────────────
   const [sectionOpened, { open: openSection, close: closeSection }] =
     useDisclosure(false);
   const [sectionForm, setSectionForm] = useState<
@@ -70,7 +94,7 @@ export default function Team() {
     closeSection();
   };
 
-  // ── Member add/edit modal ─────────────────────────────
+  // ── Member modal ──────────────────────────────────────
   const [memberOpened, { open: openMember, close: closeMember }] =
     useDisclosure(false);
   const [editing, setEditing] = useState<TeamMember | null>(null);
@@ -78,23 +102,61 @@ export default function Team() {
     ...emptyMember,
   }));
 
-  const handleMemberChange = (field: keyof TeamMember, value: string) =>
-    setMemberForm((p) => ({ ...p, [field]: value }));
+  // ── Link sub-modal (inside member modal) ──────────────
+  const [linkModalMode, setLinkModalMode] = useState<LinkModalMode>(null);
+  const [linkForm, setLinkForm] = useState<MemberLink>({ ...emptyLink });
+  const [linkModalOpened, { open: openLinkModal, close: closeLinkModal }] =
+    useDisclosure(false);
 
+  const openEditLink = (link: MemberLink, index: number) => {
+    setLinkForm({ ...link });
+    setLinkModalMode({ type: "editLink", linkIndex: index });
+    openLinkModal();
+  };
+
+  const openAddLink = () => {
+    setLinkForm({ ...emptyLink });
+    setLinkModalMode({ type: "addLink" });
+    openLinkModal();
+  };
+
+  const handleLinkSave = () => {
+    const currentLinks = memberForm.links ?? [];
+    if (linkModalMode?.type === "editLink") {
+      const updated = currentLinks.map((l, i) =>
+        i === linkModalMode.linkIndex ? { ...linkForm } : l,
+      );
+      setMemberForm((p) => ({ ...p, links: updated }));
+    } else if (linkModalMode?.type === "addLink") {
+      setMemberForm((p) => ({ ...p, links: [...currentLinks, linkForm] }));
+    }
+    closeLinkModal();
+    setLinkModalMode(null);
+  };
+
+  const handleRemoveLink = (index: number) => {
+    setMemberForm((p) => ({
+      ...p,
+      links: (p.links ?? []).filter((_, i) => i !== index),
+    }));
+  };
+
+  // ── Member CRUD ───────────────────────────────────────
   const openAdd = () => {
     setEditing(null);
-    setMemberForm({ ...emptyMember, id: Date.now() });
+    setMemberForm({ ...emptyMember, id: Date.now(), links: [] });
     openMember();
   };
 
   const openEdit = (member: TeamMember) => {
     setEditing(member);
-    setMemberForm({ ...member });
+    setMemberForm({ ...member, links: [...(member.links ?? [])] });
     openMember();
   };
 
   const handleMemberSave = () => {
     if (editing) {
+      // ✅ updateTeamMember(id, Partial<TeamMember>) — links included automatically
       updateTeamMember(editing.id, memberForm);
     } else {
       addTeamMember(memberForm);
@@ -111,7 +173,6 @@ export default function Team() {
         p={0}
         style={{ overflow: "hidden", border: "1px solid #E8E8E8" }}
       >
-        {/* Image */}
         <Box style={{ aspectRatio: "1 / 1", overflow: "hidden" }}>
           <Image
             src={member.image}
@@ -122,7 +183,6 @@ export default function Team() {
           />
         </Box>
 
-        {/* Info */}
         <Box ta="center" p={30} style={{ borderTop: "1px solid #E8E8E8" }}>
           <Text fw={700} c="dark" fz={14} mb={4}>
             {member.name}
@@ -131,19 +191,55 @@ export default function Team() {
             {member.profession}
           </Text>
 
+          {/* ✅ Dynamic social links from member.links */}
           <Group justify="center" gap="xs" mb={isEditMode ? "sm" : 0}>
-            <ActionIcon variant="subtle" color="green" radius="xl" size="sm">
-              <IconBrandFacebook size={24} />
-            </ActionIcon>
-            <ActionIcon variant="subtle" color="green" radius="xl" size="sm">
-              <IconBrandInstagram size={24} />
-            </ActionIcon>
-            <ActionIcon variant="subtle" color="green" radius="xl" size="sm">
-              <IconBrandTwitter size={24} />
-            </ActionIcon>
+            {(member.links ?? []).length > 0 ? (
+              member.links!.map((link, i) => (
+                <ActionIcon
+                  key={i}
+                  variant="subtle"
+                  color="green"
+                  radius="xl"
+                  size="sm"
+                  component="a"
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MemberSocialIcon platform={link.platform} />
+                </ActionIcon>
+              ))
+            ) : (
+              // ── Fallback static icons if no links defined ──
+              <>
+                <ActionIcon
+                  variant="subtle"
+                  color="green"
+                  radius="xl"
+                  size="sm"
+                >
+                  <IconBrandFacebook size={20} />
+                </ActionIcon>
+                <ActionIcon
+                  variant="subtle"
+                  color="green"
+                  radius="xl"
+                  size="sm"
+                >
+                  <IconBrandInstagram size={20} />
+                </ActionIcon>
+                <ActionIcon
+                  variant="subtle"
+                  color="green"
+                  radius="xl"
+                  size="sm"
+                >
+                  <IconBrandTwitter size={20} />
+                </ActionIcon>
+              </>
+            )}
           </Group>
 
-          {/* Edit/remove only in edit mode */}
           {isEditMode && (
             <Group justify="center" gap={6}>
               <Tooltip label="Edit" withArrow>
@@ -178,7 +274,7 @@ export default function Team() {
   return (
     <Box bg="white">
       <Container size="xl" py={112}>
-        {/* ── Section header ── */}
+        {/* Section header */}
         <Group justify="space-between" align="flex-start" mb={4}>
           <Group gap="xs" align="center">
             <Text c="green" fw={700} fz={14}>
@@ -198,7 +294,6 @@ export default function Team() {
               </Tooltip>
             )}
           </Group>
-
           {isEditMode && (
             <Tooltip label="Add Member" withArrow>
               <ActionIcon
@@ -221,15 +316,10 @@ export default function Team() {
           {description}
         </Text>
 
-        {/* ── Carousel ── */}
         <Carousel
           slideSize={{ base: "100%", sm: "50%", md: "25%" }}
           slideGap={{ base: "md", sm: "lg" }}
-          emblaOptions={{
-            loop: true,
-            align: "start",
-            slidesToScroll,
-          }}
+          emblaOptions={{ loop: true, align: "start", slidesToScroll }}
           withControls
           withIndicators
           nextControlIcon={<IconArrowRight size={16} />}
@@ -240,7 +330,6 @@ export default function Team() {
               border: "1px solid #E8E8E8",
               color: "#2f9e44",
               boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-              "&:hover": { backgroundColor: "#f0fdf4" },
             },
             indicator: {
               backgroundColor: "#2f9e44",
@@ -248,9 +337,7 @@ export default function Team() {
               height: 8,
               borderRadius: "50%",
             },
-            container: {
-              marginBottom: "40px",
-            },
+            container: { marginBottom: "40px" },
           }}
         >
           {slides}
@@ -316,6 +403,7 @@ export default function Team() {
         onClose={closeMember}
         title={editing ? "Edit Team Member" : "Add Team Member"}
         centered
+        size="md"
       >
         <Stack gap="sm">
           <TextInput
@@ -324,7 +412,7 @@ export default function Team() {
             value={memberForm.name}
             onChange={(e) => {
               const value = e.currentTarget.value;
-              handleMemberChange("name", value);
+              setMemberForm((p) => ({ ...p, name: value }));
             }}
           />
           <TextInput
@@ -333,7 +421,7 @@ export default function Team() {
             value={memberForm.profession}
             onChange={(e) => {
               const value = e.currentTarget.value;
-              handleMemberChange("profession", value);
+              setMemberForm((p) => ({ ...p, profession: value }));
             }}
           />
           <TextInput
@@ -342,10 +430,9 @@ export default function Team() {
             value={memberForm.image}
             onChange={(e) => {
               const value = e.currentTarget.value;
-              handleMemberChange("image", value);
+              setMemberForm((p) => ({ ...p, image: value }));
             }}
           />
-          {/* Image preview */}
           {memberForm.image && (
             <Box
               w={80}
@@ -366,6 +453,72 @@ export default function Team() {
               />
             </Box>
           )}
+
+          {/* ── Social Links manager ── */}
+          <Divider label="Social Links" labelPosition="left" />
+
+          <Stack gap={6}>
+            {(memberForm.links ?? []).map((link, index) => (
+              <Group
+                key={index}
+                gap={8}
+                align="center"
+                justify="space-between"
+                p={8}
+                style={{ border: "1px solid #E8E8E8", borderRadius: 8 }}
+              >
+                <Group gap={8}>
+                  <ActionIcon variant="subtle" color="green" size="sm">
+                    <MemberSocialIcon platform={link.platform} />
+                  </ActionIcon>
+                  <Box>
+                    <Text fz={12} fw={600} c="dark" tt="capitalize">
+                      {link.platform || "—"}
+                    </Text>
+                    <Text fz={11} c="gray" style={{ wordBreak: "break-all" }}>
+                      {link.href || "no url"}
+                    </Text>
+                  </Box>
+                </Group>
+                <Group gap={4}>
+                  <Tooltip label="Edit" withArrow>
+                    <ActionIcon
+                      variant="light"
+                      color="blue"
+                      radius="xl"
+                      size="xs"
+                      onClick={() => openEditLink(link, index)}
+                    >
+                      <IconEdit size={10} />
+                    </ActionIcon>
+                  </Tooltip>
+                  <Tooltip label="Remove" withArrow>
+                    <ActionIcon
+                      variant="light"
+                      color="red"
+                      radius="xl"
+                      size="xs"
+                      onClick={() => handleRemoveLink(index)}
+                    >
+                      <IconTrash size={10} />
+                    </ActionIcon>
+                  </Tooltip>
+                </Group>
+              </Group>
+            ))}
+
+            <Button
+              variant="light"
+              color="green"
+              size="xs"
+              leftSection={<IconPlus size={12} />}
+              onClick={openAddLink}
+              style={{ alignSelf: "flex-start" }}
+            >
+              Add Social Link
+            </Button>
+          </Stack>
+
           <Group justify="flex-end" mt="sm">
             <Button variant="default" onClick={closeMember}>
               Cancel
@@ -376,6 +529,64 @@ export default function Team() {
               disabled={!memberForm.name.trim()}
             >
               {editing ? "Save Changes" : "Add Member"}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* ── Link Add/Edit Sub-Modal ── */}
+      <Modal
+        opened={linkModalOpened}
+        onClose={closeLinkModal}
+        title={
+          linkModalMode?.type === "editLink"
+            ? "Edit Social Link"
+            : "Add Social Link"
+        }
+        centered
+        size="xs"
+        // ✅ higher z-index so it sits above the member modal
+        zIndex={400}
+      >
+        <Stack gap="sm">
+          <TextInput
+            label="Platform"
+            placeholder="facebook | instagram | twitter"
+            value={linkForm.platform}
+            disabled={linkModalMode?.type === "editLink"} // ✅ platform is the key
+            onChange={(e) => {
+              const value = e.currentTarget.value;
+              setLinkForm((p) => ({ ...p, platform: value }));
+            }}
+          />
+          <TextInput
+            label="URL"
+            placeholder="https://facebook.com/username"
+            value={linkForm.href}
+            onChange={(e) => {
+              const value = e.currentTarget.value;
+              setLinkForm((p) => ({ ...p, href: value }));
+            }}
+          />
+          {/* Icon preview */}
+          <Group gap={8} align="center">
+            <Text fz="xs" c="gray">
+              Preview:
+            </Text>
+            <ActionIcon variant="subtle" color="green">
+              <MemberSocialIcon platform={linkForm.platform} />
+            </ActionIcon>
+          </Group>
+          <Group justify="flex-end" mt="sm">
+            <Button variant="default" onClick={closeLinkModal}>
+              Cancel
+            </Button>
+            <Button
+              color="green"
+              onClick={handleLinkSave}
+              disabled={!linkForm.platform.trim() || !linkForm.href.trim()}
+            >
+              {linkModalMode?.type === "editLink" ? "Save Changes" : "Add Link"}
             </Button>
           </Group>
         </Stack>

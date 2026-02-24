@@ -29,12 +29,19 @@ export type PackageContent = {
   packages: PackageItem[];
 };
 
+export type MemberSocialLink = {
+  platform: string;
+  href: string;
+};
+
 export type TeamMember = {
   id: number;
   name: string;
   profession: string;
   image: string;
+  links?: MemberSocialLink[];
 };
+
 
 export type TeamContent = {
   label: string;
@@ -97,9 +104,7 @@ export type SiteDataContextType = {
   addNavLink: (link: NavLink) => void;
   removeNavLink: (label: string) => void;
   updateNavLink: (label: string, updated: Partial<NavLink>) => void;
-  updateNavbarContent: (
-    updated: Partial<Omit<NavbarContent, "navLinks">>,
-  ) => void;
+ updateNavbarContent: (updated: Partial<NavbarContent>) => void;
 
   // Packages
   addPackage: (pkg: PackageItem) => void;
@@ -118,6 +123,7 @@ export type SiteDataContextType = {
   updateTeamSection: (
     updated: Partial<Pick<TeamContent, "label" | "title" | "description">>,
   ) => void;
+  
 
   // Newsletter
   updateNewsletterContent: (updated: Partial<NewsletterContent>) => void;

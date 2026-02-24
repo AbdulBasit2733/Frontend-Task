@@ -1,12 +1,13 @@
 import { Box } from "@mantine/core";
-import EditModeBar from "./components/ui/edit-mode-bar";
+import EditModeBar from "./components/common/edit-mode-bar";
 import Navbar from "./components/common/header";
-import Hero from "./components/ui/hero";
-import Packages from "./components/ui/packages";
-import Team from "./components/ui/team";
-import Newsletter from "./components/ui/newsletter";
+
+import Packages from "./sections/packages";
+import Team from "./sections/team";
+import Newsletter from "./sections/newsletter";
 import Footer from "./components/common/footer";
 import { useSiteData } from "./context/site-data-context";
+import Hero from "./sections/hero";
 
 export default function App() {
   const { isEditMode } = useSiteData();

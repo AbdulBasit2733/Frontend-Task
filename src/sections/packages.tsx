@@ -24,8 +24,8 @@ import {
   IconTrash,
   IconPlus,
 } from "@tabler/icons-react";
-import { useSiteData } from "../../context/site-data-context";
-import type { PackageContent, PackageItem } from "../../types/types";
+import { useSiteData } from "../context/site-data-context";
+import type { PackageContent, PackageItem } from "../types/types";
 
 const emptyPkg: PackageItem = { id: 0, icon: "", title: "", description: "" };
 
@@ -103,7 +103,7 @@ export default function Packages() {
               w={94}
               h={7}
               bg="#E74040"
-              mb="md"
+              mb="xl"
               style={{ borderRadius: 2 }}
             />
 
@@ -132,7 +132,7 @@ export default function Packages() {
               )}
             </Group>
 
-            <Text c="gray" fz={14} fw={400} lh="20px" mb="lg">
+            <Text c="gray" fz={14} fw={400} lh="20px" my="xl" ta="left">
               {description}
             </Text>
 

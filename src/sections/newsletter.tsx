@@ -15,8 +15,8 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit } from "@tabler/icons-react";
-import { useSiteData } from "../../context/site-data-context";
-import type { NewsletterContent } from "../../types/types";
+import { useSiteData } from "../context/site-data-context";
+import type { NewsletterContent } from "../types/types";
 
 // ── Validation helpers ────────────────────────────────
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

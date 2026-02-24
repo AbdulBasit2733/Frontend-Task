@@ -18,8 +18,8 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit } from "@tabler/icons-react";
-import { useSiteData } from "../../context/site-data-context";
-import type { HeroContent } from "../../types/types";
+import { useSiteData } from "../context/site-data-context";
+import type { HeroContent } from "../types/types";
 
 export default function Hero() {
   const { data, updateHeroContent, isEditMode } = useSiteData();
@@ -65,11 +65,11 @@ export default function Hero() {
 
   return (
     <Container size="xl" py={{ base: 48, md: 80 }}>
-      <Grid align="center" gutter="xl">
+      <Grid align="center" gutter="xs">
         {/* ── LEFT ── */}
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Group align="center" gap="xs" mb={10}>
-            <Text c="green" fw={700} fz={14}>
+          <Group align="center" gap="xs">
+            <Text c="green" fw={700} fz={14} mb={"lg"}>
               {heroContent.label}
             </Text>
             {isEditMode && (
@@ -91,7 +91,7 @@ export default function Hero() {
             order={1}
             c="dark"
             fw={800}
-            mb="md"
+            mb="xl"
             style={{ fontSize: "clamp(32px, 5vw, 58px)", lineHeight: 1.15 }}
           >
             {titleLines.map((line, i) => (
@@ -102,7 +102,7 @@ export default function Hero() {
             ))}
           </Title>
 
-          <Text c="gray" fz={14} fw={400} lh="20px" mb="xl" maw={340}>
+          <Text c="gray" fz={"h4"} fw={400} lh="20px" mb="xl" maw={340}>
             {heroContent.description}
           </Text>
 

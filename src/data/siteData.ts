@@ -38,8 +38,18 @@ export const defaultData: SiteDataState = {
       "Problems trying to resolve the conflict between the two major realms of Classical physics: Newtonian mechanics",
     anchorContent: { label: "Learn More", href: "#" },
     packages: [
-      { id: 1, icon: computerImage, title: "Certified Teacher", description: "The gradual accumulation of information about." },
-      { id: 2, icon: teleScopeImage, title: "Expert Instruction", description: "The gradual accumulation of information about." },
+      {
+        id: 1,
+        icon: computerImage,
+        title: "Certified Teacher",
+        description: "The gradual accumulation of information about.",
+      },
+      {
+        id: 2,
+        icon: teleScopeImage,
+        title: "Expert Instruction",
+        description: "The gradual accumulation of information about.",
+      },
     ],
   },
 
@@ -49,10 +59,50 @@ export const defaultData: SiteDataState = {
     description:
       "Problems trying to resolve the conflict between the two major realms of Classical physics: Newtonian mechanics",
     teamMembers: [
-      { id: 1, name: "Julian Jameson", profession: "Profession", image: userCoverImage1 },
-      { id: 2, name: "Julian Jameson", profession: "Profession", image: userCoverImage2 },
-      { id: 3, name: "Julian Jameson", profession: "Profession", image: userCoverImage3 },
-      { id: 4, name: "Julian Jameson", profession: "Profession", image: userCoverImage4 },
+      {
+        id: 1,
+        name: "Julian Jameson",
+        profession: "Profession",
+        image: userCoverImage1,
+        links: [
+          { platform: "facebook", href: "#" },
+          { platform: "instagram", href: "#" },
+          { platform: "twitter", href: "#" },
+        ],
+      },
+      {
+        id: 2,
+        name: "Julian Jameson",
+        profession: "Profession",
+        image: userCoverImage2,
+        links: [
+          { platform: "facebook", href: "#" },
+          { platform: "instagram", href: "#" },
+          { platform: "twitter", href: "#" },
+        ],
+      },
+      {
+        id: 3,
+        name: "Julian Jameson",
+        profession: "Profession",
+        image: userCoverImage3,
+        links: [
+          { platform: "facebook", href: "#" },
+          { platform: "instagram", href: "#" },
+          { platform: "twitter", href: "#" },
+        ],
+      },
+      {
+        id: 4,
+        name: "Julian Jameson",
+        profession: "Profession",
+        image: userCoverImage4,
+        links: [
+          { platform: "facebook", href: "#" },
+          { platform: "instagram", href: "#" },
+          { platform: "twitter", href: "#" },
+        ],
+      },
     ],
   },
 
@@ -106,14 +156,27 @@ export const defaultData: SiteDataState = {
       header: "Get In Touch",
       isContact: true,
       links: [
-        { title: "(480) 555-0103", href: "tel:+14805550103", icon: phoneIcon, type: "phone" },
-        { title: "4517 Washington Ave. Manchester, Kentucky 39495", href: "#", icon: locationIcon, type: "address" },
-        { title: "debra.holt@example.com", href: "mailto:debra.holt@example.com", icon: emailIcon, type: "email" },
+        {
+          title: "(480) 555-0103",
+          href: "tel:+14805550103",
+          icon: phoneIcon,
+          type: "phone",
+        },
+        {
+          title: "4517 Washington Ave. Manchester, Kentucky 39495",
+          href: "#",
+          icon: locationIcon,
+          type: "address",
+        },
+        {
+          title: "debra.holt@example.com",
+          href: "mailto:debra.holt@example.com",
+          icon: emailIcon,
+          type: "email",
+        },
       ],
     },
   ],
-
-  // ✅ consistent key name
   footerBottomContent: {
     copyright: "Made With Love By Figmaland All Right Reserved",
     socialLinks: [
