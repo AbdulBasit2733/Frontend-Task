@@ -23,9 +23,6 @@ declare module '@mantine/core' {
 
 export const theme = createTheme({
   fontFamily: 'Montserrat, sans-serif',
-  headings: {
-    fontFamily: 'Montserrat, sans-serif',
-  },
   colors: {
     dark:      colorsTuple('#252B42'), // navbar, headings, footer
     gray:      colorsTuple('#737373'), // body text, muted labels
