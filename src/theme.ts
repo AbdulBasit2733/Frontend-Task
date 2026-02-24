@@ -5,7 +5,6 @@ import {
   type DefaultMantineColor,
 } from '@mantine/core';
 
-// TypeScript override for autocomplete
 type ExtendedColors =
   | 'dark'
   | 'gray'
@@ -36,5 +35,5 @@ export const theme = createTheme({
     peach:     colorsTuple('#FEBC94'), // decorative blobs, highlights
     white:     colorsTuple('#FFFFFF'), // cards, navbar bg
   },
-  primaryColor: 'green', // default color for all Mantine Buttons/Badges
+  primaryColor: 'green',
 });

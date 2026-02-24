@@ -1,14 +1,21 @@
-.anchorWithArrow {
+/* CustomAnchor.module.css */
+.anchor {
   display: flex;
   align-items: center;
   gap: 4px;
+  /* Smooth transition for both color and the icon movement */
   transition: color 0.2s ease;
+  text-decoration: none;
 }
 
-.anchorWithArrow svg {
-  transition: transform 0.2s ease;
+.icon {
+  /* Set the initial transition state for the icon */
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
 }
 
-.anchorWithArrow:hover svg {
+/* When the anchor is hovered, move the icon 5px to the right */
+.anchor:hover .icon {
   transform: translateX(5px);
 }
