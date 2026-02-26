@@ -7,18 +7,9 @@ import {
   Group,
   TextInput,
   Button,
-  Modal,
-  Textarea,
-  Stack,
-  ActionIcon,
-  Tooltip,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconEdit } from "@tabler/icons-react";
-import { useSiteData } from "../context/site-data-context";
-import type { NewsletterContent } from "../types/types";
+import { defaultData } from "../data/siteData";
 
-// ── Validation helpers ────────────────────────────────
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function validateEmail(value: string): string | null {
@@ -27,37 +18,15 @@ function validateEmail(value: string): string | null {
   return null;
 }
 
-type FormErrors = Partial<Record<keyof NewsletterContent, string>>;
-
-function validateForm(form: NewsletterContent): FormErrors {
-  const errors: FormErrors = {};
-  if (!form.label.trim()) errors.label = "Label is required";
-  if (!form.title.trim()) errors.title = "Title is required";
-  if (!form.description.trim()) errors.description = "Description is required";
-  if (!form.placeholder.trim())
-    errors.placeholder = "Placeholder text is required";
-  if (!form.btnText.trim()) errors.btnText = "Button text is required";
-  return errors;
-}
+const newsletterContent = defaultData.newsletterSectionContent;
 
 export default function Newsletter() {
-  const { data, isEditMode, updateNewsletterContent } = useSiteData();
-  const newsletterContent = data.newsletterSectionContent;
-
-  // ── Subscriber email state ────────────────────────────
-  const [email, setEmail] = useState("");
+  const [email, setEmail]           = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted]   = useState(false);
 
-  // ── Edit modal state ──────────────────────────────────
-  const [opened, { open, close }] = useDisclosure(false);
-  const [form, setForm] = useState<NewsletterContent>({ ...newsletterContent });
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
-
-  // ── Subscriber email handlers ─────────────────────────
   const handleEmailChange = (value: string) => {
     setEmail(value);
-
     if (emailError) setEmailError(validateEmail(value));
   };
 
@@ -70,62 +39,19 @@ export default function Newsletter() {
     setEmailError(null);
   };
 
-  // ── Edit modal handlers ───────────────────────────────
-  const handleChange = (field: keyof NewsletterContent, value: string) => {
-    setForm((p) => ({ ...p, [field]: value }));
-
-    if (formErrors[field]) {
-      setFormErrors((p) => ({ ...p, [field]: undefined }));
-    }
-  };
-
-  const handleOpen = () => {
-    setForm({ ...newsletterContent });
-    setFormErrors({});
-    open();
-  };
-
-  const handleClose = () => {
-    setFormErrors({});
-    close();
-  };
-
-  const handleSave = () => {
-    const errors = validateForm(form);
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
-    }
-    updateNewsletterContent(form);
-    close();
-  };
-
   return (
     <Box bg="lightPink">
       <Container size="lg" py={112}>
         <Box ta="center">
-          <Group justify="center" align="center" gap="xs" mb={4}>
-            <Text c="green" fw={700} fz={14}>
-              {newsletterContent.label}
-            </Text>
-            {isEditMode && (
-              <Tooltip label="Edit Newsletter" withArrow>
-                <ActionIcon
-                  variant="light"
-                  color="blue"
-                  radius="xl"
-                  size="sm"
-                  onClick={handleOpen}
-                >
-                  <IconEdit size={14} />
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </Group>
+
+          <Text c="green" fw={700} fz={14} mb={4}>
+            {newsletterContent.label}
+          </Text>
 
           <Title order={2} c="dark" fw={700} mb="xs" fz={24}>
             {newsletterContent.title}
           </Title>
+
           <Text c="gray" fz={14} lh={1.7} mb="xl" maw={600} mx="auto" fw={400}>
             {newsletterContent.description}
           </Text>
@@ -154,9 +80,7 @@ export default function Newsletter() {
                       borderWidth: "1px",
                       backgroundColor: "#F9F9F9",
                     },
-                    error: {
-                      textAlign: "left",
-                    },
+                    error: { textAlign: "left" },
                   }}
                   style={{ flex: 1 }}
                 />
@@ -168,7 +92,6 @@ export default function Newsletter() {
                   style={{
                     borderRadius: "0 8px 8px 0",
                     flexShrink: 0,
-
                     alignSelf: "flex-start",
                   }}
                 >
@@ -181,63 +104,6 @@ export default function Newsletter() {
           )}
         </Box>
       </Container>
-
-      {/* ── Edit Modal ── */}
-      <Modal
-        opened={opened}
-        onClose={handleClose}
-        title="Edit Newsletter Section"
-        centered
-        size="sm"
-      >
-        <Stack gap="sm">
-          <TextInput
-            label="Label (above title)"
-            placeholder="Newsletter"
-            value={form.label}
-            error={formErrors.label}
-            onChange={(e) => handleChange("label", e.currentTarget.value)}
-          />
-          <TextInput
-            label="Title"
-            placeholder="Watch our Courses"
-            value={form.title}
-            error={formErrors.title}
-            onChange={(e) => handleChange("title", e.currentTarget.value)}
-          />
-          <Textarea
-            label="Description"
-            placeholder="Problems trying to resolve..."
-            autosize
-            minRows={2}
-            value={form.description}
-            error={formErrors.description}
-            onChange={(e) => handleChange("description", e.currentTarget.value)}
-          />
-          <TextInput
-            label="Input Placeholder"
-            placeholder="Your Email"
-            value={form.placeholder}
-            error={formErrors.placeholder}
-            onChange={(e) => handleChange("placeholder", e.currentTarget.value)}
-          />
-          <TextInput
-            label="Button Text"
-            placeholder="Subscribe"
-            value={form.btnText}
-            error={formErrors.btnText} // ✅
-            onChange={(e) => handleChange("btnText", e.currentTarget.value)}
-          />
-          <Group justify="flex-end" mt="sm">
-            <Button variant="default" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button color="green" onClick={handleSave}>
-              Save Changes
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
     </Box>
   );
 }
