@@ -3,20 +3,14 @@ import {
   Text,
   Button,
   Anchor,
-  Container,
   Box,
   Drawer,
-  Divider,
   ScrollArea,
   ActionIcon,
   Stack,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconChevronRight,
-  IconMenu2,
-  IconX,
-} from "@tabler/icons-react";
+import { IconChevronRight, IconMenu2, IconX } from "@tabler/icons-react";
 import { defaultData } from "../../data/siteData";
 
 const { brandName, navLinks, primaryButton, secondaryButton } =
@@ -34,7 +28,9 @@ export default function Navbar() {
           href={link.href}
           c="gray"
           fz={14}
-          fw={600}
+          fw={700}
+          lh="24px"
+          style={{ letterSpacing: "0.2px", textAlign: "center" }}
           underline="never"
           onClick={onNavigate}
         >
@@ -45,47 +41,70 @@ export default function Navbar() {
   );
 
   return (
-    <Box style={{ borderBottom: "1px solid #f0f0f0" }}>
-      <Container size="lg" py="md">
-        <Group justify="space-between">
-
-          {/* ── Logo ── */}
-          <Text fw={700} fz={24} c="dark">
+    <>
+      <Box
+        w="100%"
+        h={{ base: 64, sm: 72, md: 91 }}
+        pos="sticky"
+        top={0}
+        style={{
+          zIndex: 100,
+        }}
+      >
+        <Box
+          w={{ base: "100%", xl: 1322 }}
+          h="100%"
+          mx="auto"
+          px={{ base: "md", sm: "lg", md: "xl" }}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            fw={700}
+            fz={{ base: 18, md: 24 }}
+            lh="32px"
+            style={{ letterSpacing: "0.1px" }}
+            c="dark"
+          >
             {brandName}
           </Text>
 
-          {/* ── Desktop nav links ── */}
-          <Group gap={32} visibleFrom="md">
+          <Group gap={21} visibleFrom="md">
             <NavLinkItems />
           </Group>
 
-          {/* ── Desktop: Login + CTA ── */}
-          <Group gap="sm" visibleFrom="md">
+          <Group gap={45} visibleFrom="md">
             <Anchor
               href={primaryButton.href}
               c="green"
               fw={700}
               fz={14}
+              lh="22px"
+              style={{ letterSpacing: "0.2px", textAlign: "right" }}
               underline="never"
             >
               {primaryButton.label}
             </Anchor>
+
             <Button
               component="a"
               href={secondaryButton.href}
-              color="green"
-              radius="md"
-              px={20}
-              h={40}
+              bg="green"
+              radius={5}
+              px={25}
+              h={52}
               fw={700}
               fz={14}
-              rightSection={<IconChevronRight size={16} stroke={2.5} />}
+              style={{ letterSpacing: "0.2px" }}
+              rightSection={<IconChevronRight size={12} stroke={2.5} />}
             >
               {secondaryButton.label}
             </Button>
           </Group>
-
-          {/* ── Mobile: Hamburger ── */}
           <ActionIcon
             hiddenFrom="md"
             variant="subtle"
@@ -96,10 +115,8 @@ export default function Navbar() {
           >
             <IconMenu2 size={22} />
           </ActionIcon>
-        </Group>
-      </Container>
-
-      {/* ── Mobile Drawer ── */}
+        </Box>
+      </Box>
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}
@@ -112,15 +129,12 @@ export default function Navbar() {
         }
         closeButtonProps={{ icon: <IconX size={18} /> }}
         position="right"
-        zIndex={1000}
+        zIndex={200}
       >
         <ScrollArea h="calc(100dvh - 80px)" mx="-md" px="md">
-          <Stack gap="sm" mt="sm">
+          <Stack gap="sm" mt="sm" align="self-start">
             <NavLinkItems onNavigate={closeDrawer} />
           </Stack>
-
-          <Divider my="lg" />
-
           <Stack gap="sm">
             <Anchor
               href={primaryButton.href}
@@ -135,13 +149,13 @@ export default function Navbar() {
             <Button
               component="a"
               href={secondaryButton.href}
-              color="green"
-              radius="md"
-              h={44}
+              bg="green"
+              radius={5}
+              h={52}
               fw={700}
               fz={14}
               fullWidth
-              rightSection={<IconChevronRight size={16} stroke={2.5} />}
+              rightSection={<IconChevronRight size={12} stroke={2.5} />}
               onClick={closeDrawer}
             >
               {secondaryButton.label}
@@ -149,6 +163,6 @@ export default function Navbar() {
           </Stack>
         </ScrollArea>
       </Drawer>
-    </Box>
+    </>
   );
 }
