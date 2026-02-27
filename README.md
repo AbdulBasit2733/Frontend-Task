@@ -3,6 +3,9 @@
 This project is a responsive marketing landing page implemented in **React + TypeScript** using **Mantine UI**.  
 The layout, typography, and components are built to closely follow the provided Figma design, with Mantine theming used instead of custom CSS wherever possible.
 
+### NOTE
+- font weigth 400 is not looking similar as figma's font weight 400 instead of 400 600 is looking similar, so i have used it.
+
 ### Tech stack
 
 - **React 19 + TypeScript**

@@ -142,7 +142,7 @@ export default function Newsletter() {
               >
                 <TextInput
                   placeholder={newsletterContent.placeholder}
-                  fw={700}
+                  fw={600}
                   fz={14}
                   value={email}
                   w="100%"
@@ -158,12 +158,6 @@ export default function Newsletter() {
                       backgroundColor: "#F9F9F9",
                       height: 58,
                       paddingLeft: 20,
-                      "&::placeholder": {
-                        fontWeight: 600,
-                        fontFamily: "Montserrat, sans-serif",
-                        color: "#737373",
-                        opacity: 1,
-                      },
                     },
                     error: { textAlign: "left" },
                   }}
