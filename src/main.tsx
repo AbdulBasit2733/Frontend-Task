@@ -4,16 +4,16 @@ import App from "./App.tsx";
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { theme } from "./theme.ts";
-import { SiteDataProvider } from "./context/site-data-context.tsx";
 import "@mantine/core/styles.css";
 import "@mantine/carousel/styles.css";
+import '@mantine/core/styles/baseline.css';
+import '@mantine/core/styles/default-css-variables.css';
+import '@mantine/core/styles/global.css';
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MantineProvider theme={theme}>
-      <SiteDataProvider>
-        <App />
-      </SiteDataProvider>
+      <App />
     </MantineProvider>
   </StrictMode>,
 );

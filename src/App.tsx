@@ -1,30 +1,39 @@
-import { Box } from "@mantine/core";
-import EditModeBar from "./components/common/edit-mode-bar";
+import { Box, Container, Flex, Stack } from "@mantine/core";
 import Navbar from "./components/common/header";
 
 import Packages from "./sections/packages";
 import Team from "./sections/team";
 import Newsletter from "./sections/newsletter";
 import Footer from "./components/common/footer";
-import { useSiteData } from "./context/site-data-context";
 import Hero from "./sections/hero";
 
 export default function App() {
-  const { isEditMode } = useSiteData();
-
   return (
-    <Box>
-      <EditModeBar />
-      <Box pt={isEditMode ? 52 : 0} style={{ transition: "padding 0.3s ease" }}>
-        <Box bg="lightPink">
-          <Navbar />
-          <Hero />
-        </Box>
-        <Packages />
-        <Team />
-        <Newsletter />
-        <Footer />
+    <Box
+      bg="white"
+      w="100%"
+      pos="relative"
+      style={{
+        boxShadow: "0px 0px 150px 50px rgba(0, 0, 0, 0.025)",
+      }}
+    >
+      <Box
+        style={{
+          flex: "none",
+          order: 0,
+          flexGrow: 0,
+        }}
+        bg="lightPink"
+        mih={682}
+      >
+        <Navbar />
+        <Hero />
+       
       </Box>
+      <Packages />
+      <Team />
+      <Newsletter />
+      <Footer />
     </Box>
   );
 }

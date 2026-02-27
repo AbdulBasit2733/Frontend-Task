@@ -35,7 +35,7 @@ export const defaultData: SiteDataState = {
   packageSectionContent: {
     title: "Affordable Packages",
     description:
-      "Problems trying to resolve the conflict between the two major realms of Classical physics: Newtonian mechanics",
+      "Problems trying to resolve the conflict between\nthe two major realms of Classical physics: Newtonian mechanics",
     anchorContent: { label: "Learn More", href: "#" },
     packages: [
       {
@@ -57,7 +57,7 @@ export const defaultData: SiteDataState = {
     label: "Team",
     title: "Get Quality Education",
     description:
-      "Problems trying to resolve the conflict between the two major realms of Classical physics: Newtonian mechanics",
+      "Problems trying to resolve the conflict between\nthe two major realms of Classical physics: Newtonian mechanics",
     teamMembers: [
       {
         id: 1,
@@ -103,6 +103,17 @@ export const defaultData: SiteDataState = {
           { platform: "twitter", href: "#" },
         ],
       },
+      {
+        id: 5,
+        name: "John Doe",
+        profession: "Manager",
+        image: userCoverImage2,
+        links: [
+          { platform: "facebook", href: "#" },
+          { platform: "instagram", href: "#" },
+          { platform: "twitter", href: "#" },
+        ],
+      },
     ],
   },
 
@@ -110,7 +121,7 @@ export const defaultData: SiteDataState = {
     label: "Newsletter",
     title: "Watch our Courses",
     description:
-      "Problems trying to resolve the conflict between the two major realms of Classical physics: Newtonian mechanics",
+      "Problems trying to resolve the conflict between\nthe two major realms of Classical physics: Newtonian mechanics",
     placeholder: "Your Email",
     btnText: "Subscribe",
   },

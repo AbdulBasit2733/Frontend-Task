@@ -1,142 +1,28 @@
-import { useState } from "react";
 import {
   Group,
   Text,
   Button,
   Anchor,
-  Container,
   Box,
-  Modal,
-  TextInput,
-  Stack,
-  ActionIcon,
-  Tooltip,
   Drawer,
-  Divider,
   ScrollArea,
+  ActionIcon,
+  Stack,
+  Flex,
+  Image,
+  Divider,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconChevronRight,
-  IconEdit,
-  IconTrash,
-  IconPlus,
-  IconMenu2,
-  IconX,
-} from "@tabler/icons-react";
-import { useSiteData } from "../../context/site-data-context";
-import type { NavLink } from "../../types/types";
+import { IconChevronRight, IconMenu2, IconX } from "@tabler/icons-react";
+import { defaultData } from "../../data/siteData";
 
-// ── Types ─────────────────────────────────────────────
-type SettingsForm = {
-  brandName: string;
-  primaryButtonLabel: string;
-  primaryButtonHref: string;
-  secondaryButtonLabel: string;
-  secondaryButtonHref: string;
-  navLinks: NavLink[]; // ✅ staged nav links live here
-};
-
-type LinkSubMode =
-  | { type: "editLink"; index: number }
-  | { type: "addLink" }
-  | null;
-
-const emptyLink: NavLink = { label: "", href: "" };
+const { brandName, navLinks, primaryButton, secondaryButton } =
+  defaultData.navbarSectionContent;
 
 export default function Navbar() {
-  const { data, isEditMode, updateNavbarContent } = useSiteData();
-
-  const { brandName, navLinks, primaryButton, secondaryButton } =
-    data.navbarSectionContent;
-
-  // ── Mobile drawer ─────────────────────────────────────
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
 
-  // ── Settings modal ────────────────────────────────────
-  const [settingsOpened, { open: openSettings, close: closeSettings }] =
-    useDisclosure(false);
-
-  const buildSettingsForm = (): SettingsForm => ({
-    brandName: data.navbarSectionContent.brandName,
-    primaryButtonLabel: data.navbarSectionContent.primaryButton.label,
-    primaryButtonHref: data.navbarSectionContent.primaryButton.href,
-    secondaryButtonLabel: data.navbarSectionContent.secondaryButton.label,
-    secondaryButtonHref: data.navbarSectionContent.secondaryButton.href,
-    navLinks: data.navbarSectionContent.navLinks.map((l) => ({ ...l })),
-  });
-
-  const [settingsForm, setSettingsForm] =
-    useState<SettingsForm>(buildSettingsForm);
-
-  const openNavbarSettings = () => {
-    setSettingsForm(buildSettingsForm()); // ✅ reset to latest on open
-    openSettings();
-  };
-
-  // ✅ ONE call — commits brand, buttons AND full navLinks array
-  const handleSettingsSave = () => {
-    updateNavbarContent({
-      brandName: settingsForm.brandName,
-      navLinks: settingsForm.navLinks,
-      primaryButton: {
-        label: settingsForm.primaryButtonLabel,
-        href: settingsForm.primaryButtonHref,
-      },
-      secondaryButton: {
-        label: settingsForm.secondaryButtonLabel,
-        href: settingsForm.secondaryButtonHref,
-      },
-    });
-    closeSettings();
-  };
-
-  // ── Link sub-modal (inside settings modal) ────────────
-  const [linkSubMode, setLinkSubMode] = useState<LinkSubMode>(null);
-  const [linkSubOpened, { open: openLinkSub, close: closeLinkSub }] =
-    useDisclosure(false);
-  const [linkForm, setLinkForm] = useState<NavLink>({ ...emptyLink });
-
-  const openEditLink = (link: NavLink, index: number) => {
-    setLinkForm({ ...link });
-    setLinkSubMode({ type: "editLink", index });
-    openLinkSub();
-  };
-
-  const openAddLink = () => {
-    setLinkForm({ ...emptyLink });
-    setLinkSubMode({ type: "addLink" });
-    openLinkSub();
-  };
-
-  // ✅ Only mutates settingsForm.navLinks — no context call yet
-  const handleLinkSubSave = () => {
-    if (linkSubMode?.type === "editLink") {
-      setSettingsForm((p) => ({
-        ...p,
-        navLinks: p.navLinks.map((l, i) =>
-          i === linkSubMode.index ? { ...linkForm } : l,
-        ),
-      }));
-    } else if (linkSubMode?.type === "addLink") {
-      setSettingsForm((p) => ({
-        ...p,
-        navLinks: [...p.navLinks, { ...linkForm }],
-      }));
-    }
-    closeLinkSub();
-    setLinkSubMode(null);
-  };
-
-  const handleRemoveStagedLink = (index: number) => {
-    setSettingsForm((p) => ({
-      ...p,
-      navLinks: p.navLinks.filter((_, i) => i !== index),
-    }));
-  };
-
-  // ── Rendered nav links (from live context data) ───────
   const NavLinkItems = ({ onNavigate }: { onNavigate?: () => void }) => (
     <>
       {navLinks.map((link) => (
@@ -145,7 +31,9 @@ export default function Navbar() {
           href={link.href}
           c="gray"
           fz={14}
-          fw={600}
+          fw={700}
+          lh="24px"
+          style={{ letterSpacing: "0.2px", textAlign: "center" }}
           underline="never"
           onClick={onNavigate}
         >
@@ -156,61 +44,99 @@ export default function Navbar() {
   );
 
   return (
-    <Box style={{ borderBottom: "1px solid #f0f0f0" }}>
-      <Container size="lg" py="md">
-        <Group justify="space-between">
-          {/* ── Logo + settings edit ── */}
-          <Group gap={6} align="center">
-            <Text fw={700} fz={24} c="dark">
-              {brandName}
-            </Text>
-            {isEditMode && (
-              <Tooltip label="Edit Navbar Settings" withArrow>
-                <ActionIcon
-                  variant="light"
-                  color="blue"
-                  radius="xl"
-                  size="xs"
-                  onClick={openNavbarSettings}
-                >
-                  <IconEdit size={10} />
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </Group>
+    <>
+      <Box
+        w="100%"
+        h={{ base: 64, sm: 72, md: 91 }}
+        pos="sticky"
+        top={0}
+        left={59}
+        style={{
+          zIndex: 100,
+        }}
+      >
+        <Flex
+          w={{ base: "100%", xl: 1322 }}
+          h="100%"
+          mx="auto"
+          px={{ base: "md", sm: "lg", md: "xl" }}
+          direction="row"
+          align="center"
+          justify={{ base: "space-between", md: "space-around" }}
+        >
+          <Text
+            fw={700}
+            fz={{ base: 18, md: 24 }}
+            lh="32px"
+            style={{ letterSpacing: "0.1px" }}
+            c="dark"
+          >
+            {brandName}
+          </Text>
+          <Flex
+            direction={"row"}
+            justify={"space-between"}
+            visibleFrom="md"
+            w={{ md: "auto", lg: 812 }}
+            pr={{ md: 0, lg: 60 }}
+            gap={{ md: 32, lg: 0 }}
+          >
+            <Group gap={21} visibleFrom="md">
+              <NavLinkItems />
+            </Group>
 
-          {/* ── Desktop nav links ── */}
-          <Group gap={32} visibleFrom="md">
-            <NavLinkItems />
-          </Group>
+            <Group gap={45} visibleFrom="md">
+              <Anchor
+                href={primaryButton.href}
+                c="green"
+                fw={700}
+                fz={14}
+                lh="22px"
+                style={{ letterSpacing: "0.2px", textAlign: "right" }}
+                underline="never"
+              >
+                {primaryButton.label}
+              </Anchor>
 
-          {/* ── Desktop: Login + CTA ── */}
-          <Group gap="sm" visibleFrom="md">
-            <Anchor
-              href={primaryButton.href}
-              c="green"
-              fw={700}
-              fz={14}
-              underline="never"
-            >
-              {primaryButton.label}
-            </Anchor>
-            <Button
-              component="a"
-              href={secondaryButton.href}
-              color="green"
-              radius="md"
-              px={20}
-              h={40}
-              fw={700}
-              fz={14}
-              rightSection={<IconChevronRight size={16} stroke={2.5} />}
-            >
-              {secondaryButton.label}
-            </Button>
-          </Group>
-
-          {/* ── Mobile: Hamburger ── */}
+              <Button
+                component="a"
+                href={secondaryButton.href}
+                bg="green"
+                radius={5}
+                px={25}
+                h={52}
+                py={15}
+                fw={700}
+                fz={14}
+                style={{ letterSpacing: "0.2px" }}
+                rightSection={
+                  <svg
+                    width="12"
+                    height="10"
+                    viewBox="0 0 12 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clipPath="url(#clip0_0_52)">
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M0 5C0 4.81059 0.079009 4.62895 0.219646 4.49502C0.360282 4.36109 0.551026 4.28584 0.749916 4.28584H9.43845L6.21831 1.22068C6.07749 1.08658 5.99838 0.904705 5.99838 0.715059C5.99838 0.525414 6.07749 0.343536 6.21831 0.209436C6.35912 0.0753365 6.5501 0 6.74925 0C6.94839 0 7.13937 0.0753365 7.28019 0.209436L11.7797 4.49438C11.8495 4.56072 11.9049 4.63952 11.9427 4.72629C11.9805 4.81305 12 4.90606 12 5C12 5.09394 11.9805 5.18695 11.9427 5.27371C11.9049 5.36048 11.8495 5.43928 11.7797 5.50562L7.28019 9.79056C7.13937 9.92466 6.94839 10 6.74925 10C6.5501 10 6.35912 9.92466 6.21831 9.79056C6.07749 9.65646 5.99838 9.47459 5.99838 9.28494C5.99838 9.0953 6.07749 8.91342 6.21831 8.77932L9.43845 5.71416H0.749916C0.551026 5.71416 0.360282 5.63892 0.219646 5.50499C0.079009 5.37106 0 5.18941 0 5Z"
+                        fill="white"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_0_52">
+                        <rect width="12" height="10" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                }
+              >
+                {secondaryButton.label}
+              </Button>
+            </Group>
+          </Flex>
           <ActionIcon
             hiddenFrom="md"
             variant="subtle"
@@ -221,10 +147,8 @@ export default function Navbar() {
           >
             <IconMenu2 size={22} />
           </ActionIcon>
-        </Group>
-      </Container>
-
-      {/* ── Mobile Drawer ── */}
+        </Flex>
+      </Box>
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}
@@ -237,14 +161,14 @@ export default function Navbar() {
         }
         closeButtonProps={{ icon: <IconX size={18} /> }}
         position="right"
-        zIndex={1000}
+        zIndex={200}
       >
         <ScrollArea h="calc(100dvh - 80px)" mx="-md" px="md">
-          <Stack gap="sm" mt="sm">
+          <Stack gap="xl" mt="sm" align="self-start">
             <NavLinkItems onNavigate={closeDrawer} />
           </Stack>
-          <Divider my="lg" />
-          <Stack gap="sm">
+          <Divider my={30} />
+          <Stack gap="lg">
             <Anchor
               href={primaryButton.href}
               c="green"
@@ -258,13 +182,13 @@ export default function Navbar() {
             <Button
               component="a"
               href={secondaryButton.href}
-              color="green"
-              radius="md"
-              h={44}
+              bg="green"
+              radius={5}
+              h={52}
               fw={700}
               fz={14}
               fullWidth
-              rightSection={<IconChevronRight size={16} stroke={2.5} />}
+              rightSection={<IconChevronRight size={12} stroke={2.5} />}
               onClick={closeDrawer}
             >
               {secondaryButton.label}
@@ -272,200 +196,6 @@ export default function Navbar() {
           </Stack>
         </ScrollArea>
       </Drawer>
-
-      {/* ══ SETTINGS MODAL — brand + buttons + staged nav links ══ */}
-      <Modal
-        opened={settingsOpened}
-        onClose={closeSettings}
-        title="Edit Navbar Settings"
-        centered
-        size="md"
-      >
-        <Stack gap="sm">
-          {/* Brand */}
-          <TextInput
-            label="Brand Name"
-            placeholder="Brandname"
-            value={settingsForm.brandName}
-            onChange={(e) => {
-              const value = e.currentTarget.value;
-              setSettingsForm((p) => ({ ...p, brandName: value }));
-            }}
-          />
-
-          {/* Login button */}
-          <Group grow>
-            <TextInput
-              label="Login Button Label"
-              placeholder="Login"
-              value={settingsForm.primaryButtonLabel}
-              onChange={(e) => {
-                const value = e.currentTarget.value;
-                setSettingsForm((p) => ({ ...p, primaryButtonLabel: value }));
-              }}
-            />
-            <TextInput
-              label="Login Button URL"
-              placeholder="#"
-              value={settingsForm.primaryButtonHref}
-              onChange={(e) => {
-                const value = e.currentTarget.value;
-                setSettingsForm((p) => ({ ...p, primaryButtonHref: value }));
-              }}
-            />
-          </Group>
-
-          {/* CTA button */}
-          <Group grow>
-            <TextInput
-              label="CTA Button Label"
-              placeholder="JOIN US"
-              value={settingsForm.secondaryButtonLabel}
-              onChange={(e) => {
-                const value = e.currentTarget.value;
-                setSettingsForm((p) => ({ ...p, secondaryButtonLabel: value }));
-              }}
-            />
-            <TextInput
-              label="CTA Button URL"
-              placeholder="#"
-              value={settingsForm.secondaryButtonHref}
-              onChange={(e) => {
-                const value = e.currentTarget.value;
-                setSettingsForm((p) => ({ ...p, secondaryButtonHref: value }));
-              }}
-            />
-          </Group>
-
-          {/* ── Staged nav links ── */}
-          <Divider label="Nav Links" labelPosition="left" mt="xs" />
-
-          <Stack gap={6}>
-            {settingsForm.navLinks.map((link, index) => (
-              <Group
-                key={index}
-                gap={8}
-                align="center"
-                justify="space-between"
-                p={8}
-                style={{ border: "1px solid #E8E8E8", borderRadius: 8 }}
-              >
-                <Box style={{ flex: 1, minWidth: 0 }}>
-                  <Text fz={13} fw={600} c="dark" truncate>
-                    {link.label || "—"}
-                  </Text>
-                  <Text fz={11} c="gray" truncate>
-                    {link.href || "no url"}
-                  </Text>
-                </Box>
-                <Group gap={4}>
-                  <Tooltip label="Edit" withArrow>
-                    <ActionIcon
-                      variant="light"
-                      color="blue"
-                      radius="xl"
-                      size="xs"
-                      onClick={() => openEditLink(link, index)}
-                    >
-                      <IconEdit size={10} />
-                    </ActionIcon>
-                  </Tooltip>
-                  <Tooltip label="Remove" withArrow>
-                    <ActionIcon
-                      variant="light"
-                      color="red"
-                      radius="xl"
-                      size="xs"
-                      onClick={() => handleRemoveStagedLink(index)}
-                    >
-                      <IconTrash size={10} />
-                    </ActionIcon>
-                  </Tooltip>
-                </Group>
-              </Group>
-            ))}
-
-            <Button
-              variant="light"
-              color="green"
-              size="xs"
-              leftSection={<IconPlus size={12} />}
-              onClick={openAddLink}
-              style={{ alignSelf: "flex-start" }}
-            >
-              Add Nav Link
-            </Button>
-          </Stack>
-
-          <Group justify="flex-end" mt="sm">
-            <Button variant="default" onClick={closeSettings}>
-              Cancel
-            </Button>
-            {/* ✅ ONE save — commits brand + buttons + full navLinks */}
-            <Button
-              color="green"
-              onClick={handleSettingsSave}
-              disabled={!settingsForm.brandName.trim()}
-            >
-              Save Changes
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
-
-      {/* ══ LINK SUB-MODAL (above settings modal) ════════ */}
-      <Modal
-        opened={linkSubOpened}
-        onClose={() => {
-          closeLinkSub();
-          setLinkSubMode(null);
-        }}
-        title={
-          linkSubMode?.type === "editLink" ? "Edit Nav Link" : "Add Nav Link"
-        }
-        centered
-        size="sm"
-        zIndex={400} // ✅ sits above the settings modal
-      >
-        <Stack gap="sm">
-          <TextInput
-            label="Label"
-            placeholder="Home"
-            value={linkForm.label}
-            onChange={(e) => {
-              const value = e.currentTarget.value;
-              setLinkForm((p) => ({ ...p, label: value }));
-            }}
-          />
-          <TextInput
-            label="URL"
-            placeholder="#home"
-            value={linkForm.href}
-            onChange={(e) => {
-              const value = e.currentTarget.value;
-              setLinkForm((p) => ({ ...p, href: value }));
-            }}
-          />
-          <Group justify="flex-end" mt="sm">
-            <Button
-              variant="default"
-              onClick={() => {
-                closeLinkSub();
-                setLinkSubMode(null);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              color="green"
-              onClick={handleLinkSubSave}
-              disabled={!linkForm.label.trim()}
-            >
-              {linkSubMode?.type === "editLink" ? "Save" : "Add Link"}
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
-    </Box>
+    </>
   );
 }
