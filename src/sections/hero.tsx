@@ -1,6 +1,5 @@
 import { Flex, Title, Text, Button, Group, Box, Image } from "@mantine/core";
 import { defaultData } from "../data/siteData";
-import "./hero.css"
 const heroContent = defaultData.heroSectionContent;
 const titleLines = heroContent.title.split("\n");
 
@@ -31,7 +30,7 @@ export default function Hero() {
           justify={"center"}
           align={"flex-start"}
           gap={30}
-          px={{ base: 5, md: 40 }}
+          pl={{ base: 5, md: 85 }}
           w={{ base: "100%", md: "50%" }}
         >
           <Text
@@ -63,6 +62,7 @@ export default function Hero() {
 
           <Text
             component="h4"
+            fw={600}
             className="hero-description"
             fz={20}
             lh="30px"
@@ -104,7 +104,7 @@ export default function Hero() {
           pos={{ base: "relative", md: "absolute" }}
           right={{ base: "unset", md: 0 }}
           top={{ base: "unset", md: 0 }}
-          h={{ base: 300, sm: 400, md: "100%" }}
+          h={{ base: 300, sm: 600, md: "100%" }}
           w={{ base: "100%", md: "50%" }}
         >
           <Image

@@ -30,10 +30,10 @@ export default function App() {
         <Hero />
        
       </Box>
-      {/* <Packages />
+      <Packages />
       <Team />
       <Newsletter />
-      <Footer /> */}
+      <Footer />
     </Box>
   );
 }

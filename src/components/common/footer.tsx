@@ -1,131 +1,141 @@
-import {
-  Box,
-  Container,
-  SimpleGrid,
-  Title,
-  Text,
-  Group,
-  ActionIcon,
-  Image,
-} from "@mantine/core";
-import {
-  IconBrandInstagram,
-  IconBrandFacebook,
-  IconBrandTwitter,
-  IconBrandYoutube,
-} from "@tabler/icons-react";
+import { Box, Text, ActionIcon, Anchor, Flex } from "@mantine/core";
 import { defaultData } from "../../data/siteData";
-
+import { ContactIcon, MemberSocialIcon } from "./social-icon";
 const footerColumns = defaultData.footerSectionContent;
-const footerBottom  = defaultData.footerBottomContent;
-
-function SocialIcon({ platform }: { platform: string }) {
-  if (platform === "instagram") return <IconBrandInstagram size={20} />;
-  if (platform === "twitter")   return <IconBrandTwitter size={20} />;
-  if (platform === "youtube")   return <IconBrandYoutube size={20} />;
-  return <IconBrandFacebook size={20} />;
-}
+const footerBottom = defaultData.footerBottomContent;
 
 export default function Footer() {
   return (
-    <Box>
+    <Box w="100%" bg="#FAFAFA">
       {/* ══ DIV 1 — Columns ══════════════════════════════ */}
-      <Box bg="white">
-        <Container size="lg" pt={50} pb={50}>
-          <SimpleGrid cols={{ base: 1, sm: 3, md: 5 }} spacing={0}>
-            {footerColumns.map((col) => (
-              <Box key={col.header}>
+      <Box w="100%" bg="white">
+        <Flex
+          w={{ base: "100%", xl: 1050 }}
+          mx="auto"
+          direction="column"
+          align="flex-start"
+          py={50}
+          px={{ base: "md", sm: "lg", xl: 0 }}
+        >
+          {/* ROW */}
+          <Flex
+            direction={{ base: "column", sm: "row" }}
+            align={{ base: "flex-start", md: "flex-start" }}
+            wrap="wrap"
+            gap={{ base: 32, md: 30 }}
+            w={"100%"}
+          >
+            {footerColumns.map((fc, index) => (
+              <Flex
+                key={index}
+                direction="column"
+                align="flex-start"
+                gap={20}
+                w={{
+                  base: "100%",
+                  sm: fc.isContact ? "100%" : "calc(25% - 24px)",
+                  lg: fc.isContact ? 322 : 152,
+                }}
+                style={{ flex: "none", flexGrow: 0 }}
+              >
+                <Text fw={700} fz={16} lh="24px" lts={"0.1px"} c="dark">
+                  {fc.header}
+                </Text>
 
-                {/* Column header */}
-                <Title order={6} c="dark" fw={700} fz={16} mb="md">
-                  {col.header}
-                </Title>
-
-                {/* Links */}
-                {col.links.map((link, index) =>
-                  col.isContact ? (
-                    // ── Contact row (icon + text) ──
-                    <Group
-                      key={index}
-                      gap={8}
-                      mb="xs"
-                      align={link.type === "address" ? "flex-start" : "center"}
-                      wrap="nowrap"
-                    >
-                      {link.icon && (
-                        <ActionIcon variant="white" style={{ flexShrink: 0 }}>
-                          <Image
-                            src={link.icon}
-                            alt={link.type}
-                            w={16}
-                            h={16}
-                            style={{ objectFit: "contain" }}
-                          />
-                        </ActionIcon>
-                      )}
-                      <Text
-                        component="a"
+                <Flex direction="column" align="flex-start" gap={10}>
+                  {fc.links.map((link, i) =>
+                    fc.isContact ? (
+                      <Flex
+                        key={i}
+                        direction="row"
+                        align="center"
+                        gap={10}
+                        style={{ flex: "none", flexGrow: 0 }}
+                      >
+                        <ContactIcon type={link.type} />
+                        <Anchor
+                          href={link.href}
+                          fw={700}
+                          fz={14}
+                          lh="24px"
+                          c="gray"
+                          underline="never"
+                          lts={"0.2px"}
+                        >
+                          {link.title}
+                        </Anchor>
+                      </Flex>
+                    ) : (
+                      <Anchor
+                        key={i}
                         href={link.href}
-                        c="gray"
-                        fz={12}
                         fw={700}
-                        lh={1.5}
-                        style={{ textDecoration: "none", flex: 1 }}
+                        fz={14}
+                        lh="24px"
+                        c="#737373"
+                        underline="never"
+                        style={{ letterSpacing: "0.2px" }}
                       >
                         {link.title}
-                      </Text>
-                    </Group>
-                  ) : (
-                    // ── Plain link ──
-                    <Text
-                      key={index}
-                      component="a"
-                      href={link.href}
-                      c="gray"
-                      fz={14}
-                      fw={700}
-                      mb={6}
-                      display="block"
-                      style={{ textDecoration: "none", cursor: "pointer" }}
-                    >
-                      {link.title}
-                    </Text>
-                  )
-                )}
-              </Box>
+                      </Anchor>
+                    ),
+                  )}
+                </Flex>
+              </Flex>
             ))}
-          </SimpleGrid>
-        </Container>
+          </Flex>
+        </Flex>
       </Box>
-
-      {/* ══ DIV 2 — Bottom bar ═══════════════════════════ */}
-      <Box bg="#FAFAFA" py={25}>
-        <Container size="lg">
-          <Group justify="space-between">
-
-            {/* Copyright */}
-            <Text c="gray" fz={14} fw={700}>
+      {/* ══ DIV 2 — Columns ══════════════════════════════ */}
+      <Box w="100%" bg="#FAFAFA">
+        <Flex
+          w={{ base: "100%", xl: 1050 }}
+          mx="auto"
+          direction="column"
+          align="center"
+          py={25}
+          px={{ base: "xl", sm: "lg", xl: 0 }}
+        >
+          <Flex
+            direction={{ base: "column", sm: "row" }}
+            align="center"
+            justify={{ base: "center", sm: "space-between" }}
+            gap={{ base: 20, sm: 0 }}
+            w="100%"
+          >
+            <Text
+              fw={700}
+              fz={14}
+              lh="24px"
+              c="#737373"
+              ta={{ base: "center", sm: "left" }}
+              style={{
+                letterSpacing: "0.2px",
+                fontFamily: "Montserrat, sans-serif",
+              }}
+            >
               {footerBottom.copyright}
             </Text>
 
-            {/* Social icons */}
-            <Group gap="xs">
+            {/* Social Icons */}
+            <Flex direction="row" justify="center" align="center" gap={20}>
               {footerBottom.socialLinks.map((link) => (
                 <ActionIcon
                   key={link.platform}
-                  variant="subtle"
-                  color="green"
+                  variant="transparent"
+                  color="#96BB7C"
+                  size={24}
                   component="a"
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <SocialIcon platform={link.platform} />
+                  <MemberSocialIcon platform={link.platform} />
                 </ActionIcon>
               ))}
-            </Group>
-          </Group>
-        </Container>
+            </Flex>
+          </Flex>
+        </Flex>
       </Box>
     </Box>
   );

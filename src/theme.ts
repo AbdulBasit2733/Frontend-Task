@@ -3,6 +3,7 @@ import {
   colorsTuple,
   type MantineColorsTuple,
   type DefaultMantineColor,
+  TextInput,
 } from '@mantine/core';
 
 type ExtendedColors =
@@ -22,7 +23,37 @@ declare module '@mantine/core' {
 }
 
 export const theme = createTheme({
-  fontFamily: 'Montserrat, sans-serif',
+  fontFamily: 'Montserrat, sans-serif', 
+  headings: {
+    fontFamily: 'Montserrat, sans-serif',
+  },
+  components: {
+    // 1. Force font on all Text components globally
+    Text: {
+      styles: {
+        root: {
+          fontFamily: 'Montserrat, sans-serif',
+        },
+      },
+    },
+    // 2. Force font on TextInput and its placeholder
+    TextInput: TextInput.extend({
+      styles: {
+        input: {
+          fontFamily: 'Montserrat, sans-serif',
+          fontWeight: 400,
+          // Use CSS nesting to target the placeholder
+          '&::placeholder': {
+            fontFamily: 'Montserrat, sans-serif',
+            fontWeight: 400,
+            letterSpacing: '0.2px',
+            color: '#737373',
+            opacity: 1, // Required because browsers fade placeholders
+          },
+        },
+      },
+    }),
+  },
   colors: {
     dark:      colorsTuple('#252B42'), // navbar, headings, footer
     gray:      colorsTuple('#737373'), // body text, muted labels
