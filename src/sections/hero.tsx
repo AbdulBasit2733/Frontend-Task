@@ -30,7 +30,7 @@ export default function Hero() {
           justify={"center"}
           align={"flex-start"}
           gap={30}
-          pl={{ base: 5, md: 85 }}
+          pl={{ base: 5, md: 40, lg: 85 }}
           w={{ base: "100%", md: "50%" }}
         >
           <Text
@@ -102,7 +102,7 @@ export default function Hero() {
         </Flex>
         <Box
           pos={{ base: "relative", md: "absolute" }}
-          right={{ base: "unset", md: 0 }}
+          right={{ base: "unset", md: 0, lg: 0, xl: 0, "2xl":"unset", }}
           top={{ base: "unset", md: 0 }}
           h={{ base: 300, sm: 600, md: "100%" }}
           w={{ base: "100%", md: "50%" }}

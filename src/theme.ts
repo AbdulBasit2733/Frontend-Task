@@ -26,6 +26,12 @@ export const theme = createTheme({
   headings: {
     fontFamily: 'Montserrat, sans-serif',
   },
+  breakpoints: {
+    '2xl': '100em',
+    '3xl': '120em',   
+    '4xl': '160em',   
+    '5xl': '240em',
+  },
   colors: {
     dark:      colorsTuple('#252B42'), // navbar, headings, footer
     gray:      colorsTuple('#737373'), // body text, muted labels
