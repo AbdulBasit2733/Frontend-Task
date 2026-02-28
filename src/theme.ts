@@ -3,7 +3,6 @@ import {
   colorsTuple,
   type MantineColorsTuple,
   type DefaultMantineColor,
-  TextInput,
 } from '@mantine/core';
 
 type ExtendedColors =

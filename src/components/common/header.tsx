@@ -9,7 +9,6 @@ import {
   ActionIcon,
   Stack,
   Flex,
-  Image,
   Divider,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";

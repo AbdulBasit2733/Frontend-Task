@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Stack } from "@mantine/core";
+import { Box} from "@mantine/core";
 import Navbar from "./components/common/header";
 
 import Packages from "./sections/packages";
