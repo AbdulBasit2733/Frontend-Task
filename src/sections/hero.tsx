@@ -102,7 +102,14 @@ export default function Hero() {
         </Flex>
         <Box
           pos={{ base: "relative", md: "absolute" }}
-          right={{ base: "unset", md: 0, lg: 0, xl: 0, "2xl":"unset", }}
+          right={{
+            base: "unset",
+            md: 0,
+            lg: 0,
+            xl: 0,
+            xxl: 200,
+            xxxl: "unset",
+          }}
           top={{ base: "unset", md: 0 }}
           h={{ base: 300, sm: 600, md: "100%" }}
           w={{ base: "100%", md: "50%" }}
